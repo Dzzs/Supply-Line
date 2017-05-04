@@ -418,7 +418,7 @@ public class WagonController : MonoBehaviour {
 
         if (nearWagon == true && UpgradeManager.wagonUnlocked == true)
         {
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKey(KeyCode.F) && pullingWagon == false)
             {
                 PlayerController.canMove = false;
                 Cursor.visible = true;
@@ -426,7 +426,7 @@ public class WagonController : MonoBehaviour {
                 usingWagon = true;
             }
 
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKeyDown(KeyCode.G) && usingWagon == false)
             {
                 if (pullingWagon == false)
                 {
@@ -438,7 +438,6 @@ public class WagonController : MonoBehaviour {
                     Wagon.transform.localPosition = wagonOffset;
                     Wagon.transform.localEulerAngles = wagonRot;
                     
-
                     pullingWagon = true;
                     return;
                 }
