@@ -76,6 +76,8 @@ public class UpgradeManager : MonoBehaviour {
         }
         if (InventoryManager.playerMoney >= wagonUpgradeCost)
         {
+            WagonController.wagonDurability += 5;
+
             if (currentWagonTier > 0 && wagonUnlocked == true)
             {
                 InventoryManager.playerMoney -= wagonUpgradeCost;

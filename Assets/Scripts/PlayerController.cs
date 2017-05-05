@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public CharacterController playerController;
+    public static CharacterController playerController;
     public GameObject VendorUI;
     public float movementSpeed = 5;
     public float speedH = 2.0f;
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         Cursor.visible = false;
+        playerController = GetComponent<CharacterController>();
 	}
 
     // Update is called once per frame

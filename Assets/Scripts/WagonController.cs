@@ -18,6 +18,11 @@ public class WagonController : MonoBehaviour {
     bool nearWagon;
     bool usingWagon;
     bool pullingWagon;
+    bool wagonBroken;
+    public static float wagonDurability;
+    float wagonBreakdownTimer;
+    float wagonImmuneTimer;
+    float wagonRandomBreakTimer;
 
 	void Start () {
         Wagon = GameObject.FindGameObjectWithTag("Wagon");
@@ -29,6 +34,11 @@ public class WagonController : MonoBehaviour {
         nearWagon = false;
         usingWagon = false;
         pullingWagon = false;
+        wagonBroken = false;
+        wagonBreakdownTimer = 0.0f;
+        wagonImmuneTimer = 0.0f;
+        wagonDurability = 15.0f;
+        wagonRandomBreakTimer = 0.0f;
         wagonItems = new int[8];
         for (int i = 0; i < 8; i++)
         {
@@ -414,23 +424,41 @@ public class WagonController : MonoBehaviour {
         return;
     }
 
+    void FixWagon()
+    {
+        Wagon.transform.position = new Vector3(Wagon.transform.position.x, Wagon.transform.position.y + 0.5f, Wagon.transform.position.z);
+    }
+
+    void WagonBreakDown()
+    {
+        Debug.Log("Wagon Broken!");
+        DropWagon();
+        Wagon.transform.position = new Vector3(Wagon.transform.position.x, Wagon.transform.position.y - 0.5f, Wagon.transform.position.z);
+    }
+
 	void Update () {
 
         if (nearWagon == true && UpgradeManager.wagonUnlocked == true)
         {
             if (Input.GetKey(KeyCode.F) && pullingWagon == false)
             {
+                if (wagonBroken == true)
+                {
+                    FixWagon();
+                    wagonBroken = false;
+                    return;
+                }
+
                 PlayerController.canMove = false;
                 Cursor.visible = true;
                 WagonUI.SetActive(true);
                 usingWagon = true;
             }
 
-            if (Input.GetKeyDown(KeyCode.G) && usingWagon == false)
+            if (Input.GetKeyDown(KeyCode.G) && usingWagon == false && wagonBroken == false && PlayerController.playerController.isGrounded == true)
             {
                 if (pullingWagon == false)
                 {
-                    Debug.Log("Pulling Waogn!");
                     Vector3 wagonOffset = new Vector3(-0.34f, -0.15f, -1.9f);
                     Vector3 wagonRot = new Vector3(-105, 0, 0);
                     Wagon.transform.SetParent(Player.transform);
@@ -445,11 +473,37 @@ public class WagonController : MonoBehaviour {
                 {
                     DropWagon();
                     return;
-                }
-    
+                }   
             }
         }
 
+
+        if (pullingWagon == true)
+        {
+            //Gives the wagon a safe window based on wagon durability before any chance of breaking down
+            //Once the safe window is passed there is a random amount of time before the wagon breaks down
+            //Should probably check if moving rather than just being used
+            //Still working out how exactly fixing will be handled
+            if(wagonRandomBreakTimer == 0)
+            {
+                wagonRandomBreakTimer = Random.Range(3.0f, 11.0f);
+            }
+            wagonImmuneTimer += Time.deltaTime;
+            Debug.Log("Wagon counting down");
+            if (wagonImmuneTimer >= wagonDurability)
+            {
+                Debug.Log("Wagon no longer immune, break incoming!");
+                wagonBreakdownTimer += Time.deltaTime;
+                if (wagonBreakdownTimer >= wagonRandomBreakTimer)
+                {
+                    WagonBreakDown();
+                    wagonBroken = true;
+                    wagonRandomBreakTimer = 0.0f;
+                    wagonImmuneTimer = 0.0f;
+                    wagonBreakdownTimer = 0.0f;
+                }
+            }
+        }
 
         for (int i = 0; i < 8; i++)
         {
