@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public static CharacterController playerController;
-    public GameObject VendorUI;
     public float movementSpeed = 5;
     public float speedH = 2.0f;
     public float speedV = 2.0f;
@@ -54,22 +53,22 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetKey(KeyCode.W))
             {
                 Vector3 forward = transform.TransformDirection(Vector3.forward);
-                playerController.Move(forward * movementSpeed);
+                playerController.Move(forward * (movementSpeed / 10));
             }
             if (Input.GetKey(KeyCode.S))
             {
                 Vector3 backward = transform.TransformDirection(Vector3.back);
-                playerController.Move(backward * movementSpeed);
+                playerController.Move(backward * (movementSpeed / 10));
             }
             if (Input.GetKey(KeyCode.A))
             {
                 Vector3 left = transform.TransformDirection(Vector3.left);
-                playerController.Move(left * movementSpeed);
+                playerController.Move(left * (movementSpeed / 10));
             }
             if (Input.GetKey(KeyCode.D))
             {
                 Vector3 right = transform.TransformDirection(Vector3.right);
-                playerController.Move(right * movementSpeed);
+                playerController.Move(right * (movementSpeed / 10));
 
             }
             if (Input.GetKey(KeyCode.Space) && jumpTimer < -0.4)

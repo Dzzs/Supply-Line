@@ -57,7 +57,7 @@ public class CameraController : MonoBehaviour
                 if (isFirstPerson == false)
                 {
                     isFirstPerson = true;
-                    transform.localPosition = new Vector3(0, 1, 0.3f);
+                    transform.localPosition = new Vector3(0, 1, 0.1f);
                     transform.Rotate(new Vector3(-25.0f, 0.0f, 0.0f));
 
                     return;
